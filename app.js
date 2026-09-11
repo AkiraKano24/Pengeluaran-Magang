@@ -3,8 +3,8 @@ let dataTransaksi = [];
 // ==========================================================
 // PENGATURAN LOGIN SEDERHANA
 // ==========================================================
-const USERNAME_BENAR = "Lief3024";    // <-- Ubah username sesuai keinginanmu
-const PASSWORD_BENAR = "LikeAdo2430"; // <-- Ubah password sesuai keinginanmu
+const USERNAME_BENAR = "admin";    // Ganti username jika ingin
+const PASSWORD_BENAR = "magang123"; // Ganti password jika ingin
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
@@ -26,7 +26,7 @@ function aturSistemLogin() {
     const loginError = document.getElementById("loginError");
 
     if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
+        loginForm.onsubmit = (e) => {
             e.preventDefault();
             const user = document.getElementById("usernameInput").value.trim();
             const pass = document.getElementById("passwordInput").value.trim();
@@ -39,41 +39,38 @@ function aturSistemLogin() {
             } else {
                 loginError.style.display = "block";
             }
-        });
+        };
     }
 
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
+        logoutBtn.onclick = () => {
             sessionStorage.removeItem("isLoggedIn");
             tampilkanHalamanLogin();
-        });
+        };
     }
 }
 
 function tampilkanHalamanLogin() {
-    document.getElementById("loginPage").style.display = "flex";
-    document.getElementById("appContainer").classList.add("hidden");
+    const loginPage = document.getElementById("loginPage");
+    const appContainer = document.getElementById("appContainer");
+    
+    if (loginPage) loginPage.style.display = "flex";
+    if (appContainer) appContainer.classList.add("hidden");
 }
 
 function tampilkanAplikasiUtama() {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("appContainer").classList.remove("hidden");
+    const loginPage = document.getElementById("loginPage");
+    const appContainer = document.getElementById("appContainer");
 
-    // Jalankan fungsi utama web
+    if (loginPage) loginPage.style.display = "none";
+    if (appContainer) appContainer.classList.remove("hidden");
+
     muatDataSpreadsheet();
     aturNavigasi();
     aturModalForm();
     aturFilter();
     aturRekapMingguan();
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    muatDataSpreadsheet();
-    aturNavigasi();
-    aturModalForm();
-    aturFilter();
-    aturRekapMingguan();
-});
 
 function escapeHtml(str) {
     if (str === null || str === undefined) return '';
