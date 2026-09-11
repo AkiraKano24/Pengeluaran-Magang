@@ -397,17 +397,35 @@ body::before {
 }
 
 .brand-mark {
+    position: relative;
     width: 44px;
     height: 44px;
     min-width: 44px;
     background: url('assets/rose-emblem.png') center/contain no-repeat;
-    filter: drop-shadow(0 0 12px rgba(92, 187, 255, 0.8));
-    animation: roseBreathe 4.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(92, 187, 255, 0.7));
 }
 
-@keyframes roseBreathe {
-    0%, 100% { transform: rotate(0deg)  scale(1); }
-    50%      { transform: rotate(8deg) scale(1.07); }
+/* Cahaya lembut yang berdenyut di belakang emblem — gambarnya sendiri diam,
+   jadi tidak ada getaran sub-pixel seperti saat memakai rotate/scale. */
+.brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(92, 187, 255, 0.45) 0%, rgba(45, 107, 240, 0.15) 45%, transparent 70%);
+    opacity: 0.35;
+    animation: roseGlow 4.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes roseGlow {
+    0%, 100% { opacity: 0.35; }
+    50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brand-mark::after { animation: none; }
 }
 
 .brand-text b {
