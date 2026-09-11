@@ -1,0 +1,16 @@
+# Cloudflare Pages: aturan cache
+# HTML selalu dicek ulang ke server -> update langsung terlihat
+/
+  Cache-Control: no-cache, must-revalidate
+/index.html
+  Cache-Control: no-cache, must-revalidate
+
+# CSS/JS sudah pakai versi (?v=N), aman di-cache
+/*.css
+  Cache-Control: public, max-age=86400
+/*.js
+  Cache-Control: public, max-age=86400
+
+# Gambar boleh di-cache lama
+/assets/*
+  Cache-Control: public, max-age=2592000
