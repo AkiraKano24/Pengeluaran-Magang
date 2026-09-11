@@ -3,12 +3,13 @@ let dataTransaksi = [];
 // ==========================================================
 // PENGATURAN LOGIN SEDERHANA
 // ==========================================================
-const USERNAME_BENAR = "Lief3024";    // Ganti username jika ingin
-const PASSWORD_BENAR = "LikeAdo2430"; // Ganti password jika ingin
+const USERNAME_BENAR = "admin";    
+const PASSWORD_BENAR = "magang123"; 
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
     aturSistemLogin();
+    buatKelopakMawar();
 });
 
 function cekStatusLogin() {
@@ -98,7 +99,6 @@ function formatRupiah(angka) {
     return `Rp${angka.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
 }
 
-// Konverter angka serial tanggal dari Spreadsheet
 function formatTanggalDariSheet(nilai) {
     if (!nilai || nilai === '-') return '-';
     if (!isNaN(nilai) && Number(nilai) > 30000) {
@@ -126,7 +126,7 @@ async function muatDataSpreadsheet() {
 }
 
 // ==========================================================
-// 1. DASHBOARD (Total & Rata-rata Keseluruhan)
+// DASHBOARD
 // ==========================================================
 function perbaruiDashboard() {
     let totalSemua = 0;
@@ -222,7 +222,7 @@ function perbaruiGrafikMingguan() {
             const tinggi = Math.max(Math.round((dataRataMingguan[idx] / maxRata) * 100), dataRataMingguan[idx] > 0 ? 6 : 0);
             return `
                 <div class="chart-bar-wrap" title="Minggu ${k}: ${formatRupiah(dataRataMingguan[idx])} /hari">
-                    <div class="chart-bar" style="height:${tinggi}%; background:#10B981;"></div>
+                    <div class="chart-bar" style="height:${tinggi}%; background:linear-gradient(180deg, #34D399, #059669);"></div>
                     <span class="chart-bar-label">M${k}</span>
                 </div>
             `;
@@ -251,8 +251,8 @@ function perbaruiPengeluaranTerbesar() {
 
     const tglFmt = formatTanggalDariSheet(maxItem['Tanggal']);
     container.innerHTML = `
-        <div style="background: #EEF2FF; padding: 16px; border-radius: 8px; border: 1px solid #C7D2FE;">
-            <p style="font-size: 16px; font-weight: bold; color: #4F46E5; margin-bottom: 8px;">${escapeHtml(maxItem['Keterangan'])} - ${formatRupiah(maxNominal)}</p>
+        <div style="background: rgba(56, 189, 248, 0.05); padding: 16px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2);">
+            <p style="font-size: 16px; font-weight: bold; color: #38BDF8; margin-bottom: 8px;">${escapeHtml(maxItem['Keterangan'])} - ${formatRupiah(maxNominal)}</p>
             <p><strong>Minggu:</strong> Minggu ke-${escapeHtml(maxItem['Minggu'] || '-')}</p>
             <p><strong>Hari/Tanggal:</strong> ${escapeHtml(maxItem['Hari'] || '-')}, ${escapeHtml(tglFmt)}</p>
         </div>
@@ -260,7 +260,7 @@ function perbaruiPengeluaranTerbesar() {
 }
 
 // ==========================================================
-// 2. REKAPITULASI MINGGUAN (Berdasarkan Dropdown)
+// REKAPITULASI & FILTER
 // ==========================================================
 function aturRekapMingguan() {
     const selectMinggu = document.getElementById('selectMinggu');
@@ -323,9 +323,6 @@ function hitungDanTampilkanRekap(mingguKe) {
     elRataRata.innerText = formatRupiah(rataRataPerHari) + ' /hari';
 }
 
-// ==========================================================
-// 3. TABEL SEMUA TRANSAKSI & FILTER
-// ==========================================================
 function perbaruiTabelSemua(data) {
     const sumberData = data || dataTransaksi;
     const allBody = document.getElementById('allBody');
@@ -376,7 +373,7 @@ function aturFilter() {
 }
 
 // ==========================================================
-// 4. NAVIGASI & MODAL FORM
+// NAVIGASI, MODAL & EFEK KELOPAK MAWAR JATUH
 // ==========================================================
 function aturNavigasi() {
     const navButtons = document.querySelectorAll('.nav');
@@ -387,6 +384,9 @@ function aturNavigasi() {
             document.querySelectorAll('.view').forEach(view => view.classList.add('hidden'));
             document.getElementById(e.target.getAttribute('data-view')).classList.remove('hidden');
             document.getElementById('pageTitle').innerText = e.target.innerText;
+            
+            // Picu efek ledakan kelopak mawar biru saat ganti menu
+            efekLedakanKelopak();
         });
     });
 }
@@ -454,6 +454,48 @@ function aturModalForm() {
             btnSubmit.disabled = false;
         }
     });
+}
+
+function buatKelopakMawar() {
+    const container = document.getElementById('rosePetalsContainer');
+    if (!container) return;
+
+    setInterval(() => {
+        const petal = document.createElement('div');
+        petal.classList.add('blue-petal');
+        
+        const size = Math.random() * 12 + 8;
+        petal.style.width = `${size}px`;
+        petal.style.height = `${size * 1.5}px`;
+        petal.style.left = `${Math.random() * 100}vw`;
+        
+        const durasi = Math.random() * 6 + 4;
+        petal.style.animationDuration = `${durasi}s`;
+        
+        container.appendChild(petal);
+
+        setTimeout(() => {
+            petal.remove();
+        }, durasi * 1000);
+    }, 350);
+}
+
+function efekLedakanKelopak() {
+    const container = document.getElementById('rosePetalsContainer');
+    if (!container) return;
+
+    for (let i = 0; i < 18; i++) {
+        const petal = document.createElement('div');
+        petal.classList.add('blue-petal');
+        petal.style.width = '12px';
+        petal.style.height = '18px';
+        petal.style.left = `${Math.random() * 80 + 10}vw`;
+        petal.style.top = '0px';
+        petal.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
+        container.appendChild(petal);
+
+        setTimeout(() => petal.remove(), 3500);
+    }
 }
 
 function tampilkanToast(pesan) {
