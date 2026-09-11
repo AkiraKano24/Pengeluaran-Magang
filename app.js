@@ -4,7 +4,7 @@ let dataTransaksi = [];
 // PENGATURAN LOGIN SEDERHANA
 // ==========================================================
 const USERNAME_BENAR = "Lief3024";    // <-- Ubah username sesuai keinginanmu
-const PASSWORD_BENAR = "just-somebody-want-to-be-him"; // <-- Ubah password sesuai keinginanmu
+const PASSWORD_BENAR = "LikeAdo2430"; // <-- Ubah password sesuai keinginanmu
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
