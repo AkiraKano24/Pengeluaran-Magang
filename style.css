@@ -19,8 +19,6 @@
 body {
     background-color: var(--bg-primary);
     color: var(--text-main);
-    display: grid;
-    grid-template-columns: 260px 1fr;
     min-height: 100vh;
     width: 100vw;
     overflow-x: hidden;
@@ -30,9 +28,17 @@ body {
     display: none !important;
 }
 
-/* SIDEBAR */
+/* LAYOUT APLIKASI UTAMA (FLEXBOX PENUH) */
+.app-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* SIDEBAR KIRI */
 .sidebar {
     width: 260px;
+    min-width: 260px;
     background: var(--bg-surface);
     border-right: 1px solid var(--border);
     display: flex;
@@ -88,11 +94,11 @@ body {
     color: var(--primary);
 }
 
-/* KONTEN UTAMA FLEKSIBEL */
+/* KONTEN UTAMA KANAN (MELEBAR PENUH) */
 .main {
     flex: 1;
     padding: 32px;
-    width: 100%;
+    width: calc(100% - 260px);
     min-width: 0;
 }
 
@@ -297,6 +303,89 @@ button.ghost {
 
 button.ghost:hover {
     background: var(--bg-primary);
+}
+
+/* HALAMAN LOGIN PENUH & TERPUSAT */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.login-card {
+    background: var(--bg-surface);
+    padding: 36px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h2 {
+    margin-bottom: 8px;
+    color: var(--text-main);
+    font-size: 22px;
+}
+
+.login-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.login-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.login-card input:focus {
+    border-color: var(--primary);
+}
+
+.login-card button[type="submit"] {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.login-card button[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+#loginError {
+    color: #EF4444;
+    font-size: 13px;
+    margin-top: 12px;
+    text-align: center;
+    display: none;
 }
 
 /* MODAL */
