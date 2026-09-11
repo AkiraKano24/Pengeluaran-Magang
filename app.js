@@ -26,32 +26,31 @@ function aturSistemLogin() {
     const loginError = document.getElementById("loginError");
 
     if (loginForm) {
-        loginForm.onsubmit = (e) => {
+        loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
             const user = document.getElementById("usernameInput").value.trim();
             const pass = document.getElementById("passwordInput").value.trim();
 
             if (user === USERNAME_BENAR && pass === PASSWORD_BENAR) {
                 sessionStorage.setItem("isLoggedIn", "true");
-                if (loginError) loginError.style.display = "none"; // Sembunyikan error jika benar
+                if (loginError) loginError.style.display = "none";
                 loginForm.reset();
                 tampilkanAplikasiUtama();
             } else {
-                // MUNCULKAN KETERANGAN SALAH DI SINI
                 if (loginError) {
                     loginError.innerText = "Username atau Password salah! Silakan coba lagi.";
                     loginError.style.display = "block";
                 }
             }
-        };
+        });
     }
 
     if (logoutBtn) {
-        logoutBtn.onclick = () => {
+        logoutBtn.addEventListener("click", () => {
             sessionStorage.removeItem("isLoggedIn");
-            if (loginError) loginError.style.display = "none"; // Sembunyikan pesan error saat logout
+            if (loginError) loginError.style.display = "none";
             tampilkanHalamanLogin();
-        };
+        });
     }
 }
 
