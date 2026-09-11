@@ -3,13 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Pengeluaran Magang</title>
+    <title>Pengeluaran Magang - Ado Theme</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- KONTAINER EFEK KELOPAK MAWAR BIRU BERJATUHAN -->
+    <div id="rosePetalsContainer" class="petals-container"></div>
+
     <!-- HALAMAN LOGIN -->
     <div id="loginPage" class="login-wrapper">
         <div class="login-card">
+            <div class="blue-rose-badge">🌹</div>
             <h2>Silakan Login</h2>
             <p>Masukkan akun untuk mengakses data keuangan.</p>
             <form id="loginForm">
@@ -19,13 +23,13 @@
                 <label>Password</label>
                 <input id="passwordInput" type="password" required placeholder="Password...">
                 
-                <button type="submit">Login</button>
+                <button type="submit">Masuk Panggung</button>
                 <p id="loginError">Username atau Password salah!</p>
             </form>
         </div>
     </div>
 
-    <!-- APLIKASI UTAMA (AWALNYA DI-HIDDEN) -->
+    <!-- APLIKASI UTAMA -->
     <div id="appContainer" class="hidden app-layout">
         <aside class="sidebar">
             <div class="brand">
@@ -44,7 +48,7 @@
         <main class="main">
             <header class="topbar">
                 <div>
-                    <p class="eyebrow">CATATAN KEUANGAN</p>
+                    <p class="eyebrow">BLUE ROSE ARCHIVE</p>
                     <h1 id="pageTitle">Dashboard</h1>
                 </div>
                 <button class="primary" id="addBtn">+ Tambah Pengeluaran</button>
@@ -103,7 +107,7 @@
                     </div>
                     <div style="margin-bottom: 16px;">
                         <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Pilih Minggu:</label>
-                        <select id="selectMinggu" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #D1D5DB; font-size: 14px; width: 200px;">
+                        <select id="selectMinggu" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #1F2937; background: #090D16; color: #F3F4F6; font-size: 14px; width: 200px;">
                             <option value="">Pilih Minggu...</option>
                         </select>
                     </div>
@@ -115,8 +119,8 @@
                             <tbody>
                                 <tr>
                                     <td id="rekapMingguVal">-</td>
-                                    <td id="rekapTotal" style="color:#4F46E5; font-weight:600;">Rp0</td>
-                                    <td id="rekapRataRata" style="color:#10B981; font-weight:600;">Rp0 /hari</td>
+                                    <td id="rekapTotal" style="color:#38BDF8; font-weight:600;">Rp0</td>
+                                    <td id="rekapRataRata" style="color:#34D399; font-weight:600;">Rp0 /hari</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -144,7 +148,7 @@
         </main>
     </div>
 
-    <!-- MODAL POP-UP TAMBAH DATA -->
+    <!-- MODAL POP-UP -->
     <div class="modal hidden" id="modal">
         <div class="modal-card">
             <div class="modal-head">
