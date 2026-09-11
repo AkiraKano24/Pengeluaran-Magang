@@ -38,30 +38,30 @@ body {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 999;
+    z-index: 9999;
     overflow: hidden;
 }
 
 .blue-petal {
     position: absolute;
-    background: radial-gradient(circle, #38BDF8 0%, #1D4ED8 100%);
-    opacity: 0.7;
-    border-radius: 150% 0 150% 0;
-    box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+    background: linear-gradient(135deg, #38BDF8 0%, #1D4ED8 100%);
+    opacity: 0.8;
+    border-radius: 120% 0 120% 0;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
     animation: fallPetal linear infinite;
 }
 
 @keyframes fallPetal {
     0% {
         transform: translateY(-10vh) translateX(0) rotate(0deg);
-        opacity: 0.9;
+        opacity: 1;
     }
     50% {
-        transform: translateY(50vh) translateX(40px) rotate(180deg);
-        opacity: 0.6;
+        transform: translateY(50vh) translateX(60px) rotate(180deg);
+        opacity: 0.7;
     }
     100% {
-        transform: translateY(110vh) translateX(-40px) rotate(360deg);
+        transform: translateY(110vh) translateX(-60px) rotate(360deg);
         opacity: 0;
     }
 }
