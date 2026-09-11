@@ -21,23 +21,25 @@ body {
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* LAYOUT UTAMA & SIDEBAR */
+/* SIDEBAR FLEKSIBEL */
 .sidebar {
     width: 260px;
+    min-width: 260px;
     background: var(--bg-surface);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    position: fixed;
+    position: sticky;
     top: 0;
-    bottom: 0;
-    left: 0;
+    height: 100vh;
     z-index: 10;
 }
 
@@ -86,13 +88,12 @@ body {
     color: var(--primary);
 }
 
-/* AREA KONTEN UTAMA */
+/* KONTEN UTAMA FLUID (MENGISI RUANG) */
 .main {
-    margin-left: 260px;
     flex: 1;
     padding: 32px;
-    max-width: 1600px; /* Diperlebar agar tidak menumpuk di kiri saat layar/zoom besar */
     width: calc(100% - 260px);
+    min-width: 0; /* Mencegah elemen flex meluber */
 }
 
 .topbar {
@@ -100,6 +101,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .eyebrow {
@@ -124,18 +127,20 @@ button.primary {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    white-space: nowrap;
 }
 
 button.primary:hover {
     background: var(--primary-hover);
 }
 
-/* KARTU STATISTIK */
+/* KARTU STATISTIK (RESPONSIF PENUH) */
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
     margin-bottom: 24px;
+    width: 100%;
 }
 
 .card {
@@ -154,16 +159,18 @@ button.primary:hover {
 }
 
 .card strong {
-    font-size: 28px;
+    font-size: clamp(20px, 2.5vw, 28px);
     color: var(--primary);
+    word-break: break-word;
 }
 
-/* GRID DUA KOLOM OTOMATIS */
+/* GRID UTAMA FLEKSIBEL */
 .grid-two {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
     margin-bottom: 24px;
+    width: 100%;
 }
 
 .panel {
@@ -172,6 +179,7 @@ button.primary:hover {
     border-radius: var(--radius);
     padding: 24px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 
 .panel-head {
@@ -179,6 +187,8 @@ button.primary:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .panel-head h2 {
@@ -191,11 +201,12 @@ button.primary:hover {
     color: var(--text-muted);
 }
 
-/* GRAFIK BATANG */
+/* GRAFIK */
 .chart {
     height: 200px;
     display: flex;
     align-items: flex-end;
+    width: 100%;
 }
 
 .chart-bars {
@@ -203,12 +214,14 @@ button.primary:hover {
     width: 100%;
     height: 100%;
     align-items: flex-end;
-    gap: 16px;
+    gap: 12px;
     padding-top: 20px;
+    overflow-x: auto;
 }
 
 .chart-bar-wrap {
     flex: 1;
+    min-width: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -241,6 +254,7 @@ table {
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
+    min-width: 450px;
 }
 
 th, td {
@@ -254,15 +268,17 @@ th {
     background: #F9FAFB;
 }
 
-/* FILTER & PENCARIAN */
+/* FILTER */
 .filters {
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .filters input {
     flex: 1;
+    min-width: 200px;
     padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -283,7 +299,7 @@ button.ghost:hover {
     background: var(--bg-primary);
 }
 
-/* MODAL POPUP */
+/* MODAL */
 .modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -292,6 +308,7 @@ button.ghost:hover {
     align-items: center;
     justify-content: center;
     z-index: 100;
+    padding: 16px;
 }
 
 .modal-card {
@@ -301,6 +318,8 @@ button.ghost:hover {
     border-radius: var(--radius);
     padding: 32px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-head {
@@ -336,7 +355,7 @@ button.ghost:hover {
 
 .modal form .two {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 16px;
 }
 
@@ -346,7 +365,7 @@ button.full {
     padding: 12px;
 }
 
-/* TOAST NOTIFIKASI */
+/* TOAST */
 .toast {
     position: fixed;
     bottom: 24px;
