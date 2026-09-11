@@ -1,11 +1,12 @@
 :root {
-    --bg-primary: #F3F4F6;
-    --bg-surface: #FFFFFF;
-    --text-main: #1F2937;
-    --text-muted: #6B7280;
-    --primary: #4F46E5;
-    --primary-hover: #4338CA;
-    --border: #E5E7EB;
+    --bg-primary: #090D16;      /* Latar belakang utama (gelap pekat ala malam/panggung) */
+    --bg-surface: #111827;      /* Warna card / panel */
+    --text-main: #F3F4F6;       /* Teks putih terang */
+    --text-muted: #9CA3AF;      /* Teks abu-abu redup */
+    --primary: #38BDF8;         /* Biru Neon / Blue Rose ikonik Ado */
+    --primary-hover: #0EA5E9;   /* Biru saat tombol disentuh */
+    --accent-red: #EF4444;      /* Aksen merah tajam */
+    --border: #1F2937;          /* Warna garis batas gelap */
     --radius: 12px;
 }
 
@@ -58,7 +59,7 @@ body {
 }
 
 .brand-mark {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), #6366F1);
     color: white;
     width: 36px;
     height: 36px;
@@ -67,6 +68,7 @@ body {
     justify-content: center;
     border-radius: 8px;
     font-weight: bold;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
 }
 
 .sidebar nav {
@@ -90,8 +92,9 @@ body {
 }
 
 .nav:hover, .nav.active {
-    background: #EEF2FF;
+    background: rgba(56, 189, 248, 0.1);
     color: var(--primary);
+    border-left: 3px solid var(--primary);
 }
 
 /* KONTEN UTAMA KANAN */
@@ -114,30 +117,34 @@ body {
 .eyebrow {
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
+    letter-spacing: 2px;
+    color: var(--primary);
     margin-bottom: 4px;
+    font-weight: 700;
 }
 
 .topbar h1 {
     font-size: 24px;
     font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 button.primary {
     background: var(--primary);
-    color: white;
+    color: #090D16;
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
     white-space: nowrap;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 button.primary:hover {
     background: var(--primary-hover);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
 }
 
 /* KARTU STATISTIK */
@@ -154,7 +161,18 @@ button.primary:hover {
     padding: 24px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Aksen garis neon di atas card */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), transparent);
 }
 
 .card span {
@@ -168,6 +186,7 @@ button.primary:hover {
     font-size: clamp(22px, 2.5vw, 28px);
     color: var(--primary);
     word-break: break-word;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 /* GRID DUA KOLOM */
@@ -184,7 +203,7 @@ button.primary:hover {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
@@ -238,9 +257,10 @@ button.primary:hover {
 .chart-bar {
     width: 100%;
     max-width: 40px;
-    background: var(--primary);
+    background: linear-gradient(180deg, var(--primary), #1E3A8A);
     border-radius: 6px 6px 0 0;
     transition: height 0.4s ease;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 .chart-bar-label {
@@ -270,8 +290,8 @@ th, td {
 
 th {
     font-weight: 600;
-    color: var(--text-muted);
-    background: #F9FAFB;
+    color: var(--primary);
+    background: rgba(17, 24, 39, 0.8);
 }
 
 /* FILTER */
@@ -286,9 +306,16 @@ th {
     flex: 1;
     min-width: 200px;
     padding: 8px 12px;
+    background: var(--bg-primary);
     border: 1px solid var(--border);
+    color: var(--text-main);
     border-radius: 6px;
     font-size: 14px;
+}
+
+.filters input:focus {
+    border-color: var(--primary);
+    outline: none;
 }
 
 button.ghost {
@@ -299,20 +326,22 @@ button.ghost {
     cursor: pointer;
     font-weight: 600;
     color: var(--text-muted);
+    transition: all 0.2s;
 }
 
 button.ghost:hover {
-    background: var(--bg-primary);
+    background: var(--border);
+    color: var(--text-main);
 }
 
-/* HALAMAN LOGIN (POSISI DI TENGAH LAYAR DENGAN AMAN) */
+/* HALAMAN LOGIN BERTEMA ADO */
 .login-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     width: 100vw;
-    background-color: var(--bg-primary);
+    background: radial-gradient(circle at center, #111827 0%, var(--bg-primary) 100%);
     position: fixed;
     top: 0;
     left: 0;
@@ -325,9 +354,18 @@ button.ghost:hover {
     padding: 36px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.1);
     width: 100%;
     max-width: 400px;
+    position: relative;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent-red));
 }
 
 .login-card h2 {
@@ -354,7 +392,9 @@ button.ghost:hover {
     width: 100%;
     padding: 12px;
     margin-bottom: 16px;
+    background: var(--bg-primary);
     border: 1px solid var(--border);
+    color: var(--text-main);
     border-radius: 8px;
     font-size: 14px;
     outline: none;
@@ -363,26 +403,29 @@ button.ghost:hover {
 
 .login-card input:focus {
     border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
 }
 
 .login-card button[type="submit"] {
     width: 100%;
     background: var(--primary);
-    color: white;
+    color: #090D16;
     padding: 12px;
     border: none;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 .login-card button[type="submit"]:hover {
     background: var(--primary-hover);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
 }
 
 #loginError {
-    color: #EF4444;
+    color: var(--accent-red);
     font-size: 13px;
     margin-top: 12px;
     text-align: center;
@@ -393,7 +436,8 @@ button.ghost:hover {
 .modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(9, 13, 22, 0.8);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -407,12 +451,14 @@ button.ghost:hover {
     max-width: 480px;
     border-radius: var(--radius);
     padding: 32px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
     max-height: 90vh;
     overflow-y: auto;
 }
 
 .modal-head {
+    display: sentry;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -432,12 +478,15 @@ button.ghost:hover {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 16px;
+    color: var(--text-main);
 }
 
 .modal form input {
     width: 100%;
     padding: 10px 12px;
+    background: var(--bg-primary);
     border: 1px solid var(--border);
+    color: var(--text-main);
     border-radius: 6px;
     margin-top: 6px;
     font-size: 14px;
@@ -460,11 +509,12 @@ button.full {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    background: #10B981;
-    color: white;
+    background: #065F46;
+    color: #ECFDF5;
     padding: 12px 24px;
     border-radius: 8px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     z-index: 1000;
+    border: 1px solid #10B981;
 }
