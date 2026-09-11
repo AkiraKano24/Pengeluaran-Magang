@@ -3,43 +3,57 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#05060B">
+    <meta name="theme-color" content="#060912">
     <title>Blue Rose Archive — Pengeluaran Magang</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 
     <link rel="icon" href="assets/rose-emblem.png">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
-<body>
-    <!-- LAPISAN TEKSTUR: HALFTONE MANGA + GARIS KECEPATAN -->
-    <div class="fx-halftone" aria-hidden="true"></div>
-    <div class="fx-speedlines" aria-hidden="true"></div>
+<body class="mode-login">
 
-    <!-- KONTAINER EFEK KELOPAK MAWAR BIRU BERJATUHAN -->
+    <!-- ===== ATMOSFER: bokeh cahaya melayang + debu bintang + tekstur kanvas ===== -->
+    <div class="atmos" aria-hidden="true">
+        <span class="orb orb-a"></span>
+        <span class="orb orb-b"></span>
+        <span class="orb orb-warm"></span>
+        <span class="dust"></span>
+        <span class="grain"></span>
+    </div>
+
+    <!-- KONTAINER KELOPAK MAWAR (diisi oleh app.js) -->
     <div id="rosePetalsContainer" class="petals-container" aria-hidden="true"></div>
 
-    <!-- ================= HALAMAN LOGIN ================= -->
+    <!-- ================= HALAMAN LOGIN: "PANGGUNG" ================= -->
     <div id="loginPage" class="login-wrapper">
-        <div class="login-stage">
+        <div class="rays" aria-hidden="true"></div>
 
-            <!-- SISI KIRI: POSTER MAWAR BIRU -->
-            <aside class="login-art">
+        <!-- ornamen melayang dengan kedalaman (parallax) -->
+        <img class="float crystal c1" src="assets/crystal.png" alt="" data-depth="0.06" aria-hidden="true">
+        <img class="float crystal c2" src="assets/crystal.png" alt="" data-depth="0.12" aria-hidden="true">
+        <img class="float crystal c3" src="assets/crystal.png" alt="" data-depth="0.03" aria-hidden="true">
+        <img class="float feather f1" src="assets/feather.png" alt="" data-depth="0.05" aria-hidden="true">
+        <img class="float feather f2" src="assets/feather.png" alt="" data-depth="0.09" aria-hidden="true">
+
+        <div class="login-stage">
+            <!-- KIRI: MAWAR MELELEH -->
+            <aside class="login-art" data-depth="0.02">
                 <div class="login-art-img" aria-hidden="true"></div>
                 <div class="login-art-copy">
                     <p class="jp-vert">青い薔薇</p>
-                    <h1 class="art-title">BLUE<br>ROSE</h1>
-                    <p class="art-sub">ARCHIVE<span class="tick"></span>経費記録</p>
+                    <h1 class="art-title"><em>Blue</em> Rose</h1>
+                    <p class="art-sub">Archive <span class="tick"></span> 経費記録</p>
                 </div>
             </aside>
 
-            <!-- SISI KANAN: FORM -->
-            <div class="login-card">
+            <!-- KANAN: FORM KACA -->
+            <div class="login-card glass">
                 <div class="rose-mark" aria-hidden="true"></div>
                 <p class="eyebrow">認証 <span class="tick"></span> Autentikasi</p>
-                <h2>Silakan Login</h2>
+                <h2 class="serif">Silakan Login</h2>
                 <p class="lead">Masukkan akun untuk membuka arsip keuangan magang.</p>
 
                 <form id="loginForm">
@@ -49,24 +63,26 @@
                     <label for="passwordInput">Password</label>
                     <input id="passwordInput" type="password" required placeholder="Password..." autocomplete="current-password">
 
-                    <button type="submit" class="btn-blade">Masuk Arsip</button>
+                    <button type="submit" class="btn-glow">Masuk Arsip</button>
                     <p id="loginError">Username atau Password salah!</p>
                 </form>
             </div>
-
-            <div class="corner tl" aria-hidden="true"></div>
-            <div class="corner br" aria-hidden="true"></div>
         </div>
     </div>
 
-    <!-- ================= APLIKASI UTAMA ================= -->
+    <!-- ================= APLIKASI UTAMA: "KERTAS & TINTA" ================= -->
     <div id="appContainer" class="hidden app-layout">
+
+        <!-- ornamen kertas -->
+        <img class="paper-sketch" src="assets/rose-sketch.png" alt="" aria-hidden="true">
+        <img class="ink ink-a" src="assets/ink-splash.png" alt="" aria-hidden="true">
+        <img class="ink ink-b" src="assets/ink-splash.png" alt="" aria-hidden="true">
 
         <aside class="sidebar">
             <div class="brand">
                 <div class="brand-mark" aria-hidden="true"></div>
                 <div class="brand-text">
-                    <b>Blue Rose</b>
+                    <b class="serif">Blue Rose</b>
                     <span>経費記録 / Magang</span>
                 </div>
             </div>
@@ -92,10 +108,10 @@
         <main class="main">
             <header class="topbar">
                 <div class="topbar-title">
-                    <p class="eyebrow">BLUE ROSE ARCHIVE <span class="tick"></span> 青い薔薇</p>
-                    <h1 id="pageTitle">Dashboard</h1>
+                    <p class="eyebrow">Blue Rose Archive <span class="tick"></span> 青い薔薇</p>
+                    <h1 id="pageTitle" class="serif">Dashboard</h1>
                 </div>
-                <button class="primary btn-blade" id="addBtn">+ Tambah Pengeluaran</button>
+                <button class="primary btn-glow" id="addBtn">+ Tambah Pengeluaran</button>
             </header>
 
             <!-- ---------- DASHBOARD ---------- -->
@@ -103,12 +119,12 @@
                 <div class="cards">
                     <article class="card">
                         <span>Total Pengeluaran Keseluruhan</span>
-                        <strong id="totalAll">Rp0</strong>
+                        <strong id="totalAll" class="serif">Rp0</strong>
                         <i class="card-jp" aria-hidden="true">総額</i>
                     </article>
                     <article class="card card-alt">
                         <span>Rata-rata Keseluruhan</span>
-                        <strong id="avgAll">Rp0 /hari</strong>
+                        <strong id="avgAll" class="serif">Rp0 /hari</strong>
                         <i class="card-jp" aria-hidden="true">平均</i>
                     </article>
                 </div>
@@ -153,7 +169,7 @@
                         </div>
                     </section>
 
-                    <section class="panel">
+                    <section class="panel panel-spot">
                         <div class="panel-head">
                             <div>
                                 <h2>Pengeluaran Terbesar</h2>
@@ -191,7 +207,7 @@
                                 <tr>
                                     <td id="rekapMingguVal">-</td>
                                     <td id="rekapTotal" class="num num-blue">Rp0</td>
-                                    <td id="rekapRataRata" class="num num-pink">Rp0 /hari</td>
+                                    <td id="rekapRataRata" class="num num-warm">Rp0 /hari</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -229,8 +245,8 @@
         <div class="modal-card">
             <div class="modal-head">
                 <div>
-                    <p class="eyebrow">取引 <span class="tick"></span> TRANSAKSI</p>
-                    <h2>Tambah Pengeluaran</h2>
+                    <p class="eyebrow">取引 <span class="tick"></span> Transaksi</p>
+                    <h2 class="serif">Tambah Pengeluaran</h2>
                 </div>
                 <button class="close" id="closeModal" aria-label="Tutup">&times;</button>
             </div>
@@ -243,14 +259,14 @@
                     <label>Jumlah<input id="quantity" type="text" placeholder="1"></label>
                     <label>Nominal<input id="amount" type="number" min="1" step="1" required placeholder="13000"></label>
                 </div>
-                <button class="primary full btn-blade" type="submit">Simpan Pengeluaran</button>
+                <button class="primary full btn-glow" type="submit">Simpan Pengeluaran</button>
             </form>
         </div>
     </div>
 
     <div class="toast hidden" id="toast"></div>
 
-    <script src="config.js?v=5"></script>
-    <script src="app.js?v=5"></script>
+    <script src="config.js?v=6"></script>
+    <script src="app.js?v=6"></script>
 </body>
 </html>

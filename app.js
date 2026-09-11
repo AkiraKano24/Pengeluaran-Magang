@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
     aturSistemLogin();
     buatKelopakMawar();
+    aturParallax();
 });
 
 function cekStatusLogin() {
@@ -61,6 +62,8 @@ function tampilkanHalamanLogin() {
     
     if (loginPage) loginPage.style.display = "flex";
     if (appContainer) appContainer.classList.add("hidden");
+    document.body.classList.add("mode-login");
+    document.body.classList.remove("mode-app");
 }
 
 function tampilkanAplikasiUtama() {
@@ -69,6 +72,8 @@ function tampilkanAplikasiUtama() {
 
     if (loginPage) loginPage.style.display = "none";
     if (appContainer) appContainer.classList.remove("hidden");
+    document.body.classList.add("mode-app");
+    document.body.classList.remove("mode-login");
 
     muatDataSpreadsheet();
     aturNavigasi();
@@ -505,46 +510,101 @@ function aturModalForm() {
     });
 }
 
+// ==========================================================
+// KELOPAK MAWAR: sprite lukisan dengan 3 lapisan kedalaman
+// (jauh = kecil & blur, dekat = besar & tajam) supaya terasa 3D
+// ==========================================================
+const LAPISAN_KELOPAK = [
+    { kelas: 'petal-far',  ukuran: [10, 16], durasi: [14, 20] },
+    { kelas: 'petal-mid',  ukuran: [16, 24], durasi: [10, 15] },
+    { kelas: 'petal-near', ukuran: [22, 30], durasi: [7, 11] }
+];
+
+function acak(min, max) { return Math.random() * (max - min) + min; }
+
+function buatSatuKelopak(container, lapisan, opsi = {}) {
+    const petal = document.createElement('div');
+    petal.classList.add('blue-petal', lapisan.kelas);
+
+    const lebar = opsi.lebar ?? acak(lapisan.ukuran[0], lapisan.ukuran[1]);
+    petal.style.width = `${lebar}px`;
+    petal.style.height = `${lebar * 1.45}px`;
+    petal.style.left = `${opsi.left ?? acak(-2, 100)}vw`;
+    if (opsi.top !== undefined) petal.style.top = opsi.top;
+
+    // arah melayang & putaran acak (tiap kelopak beda supaya terlihat hidup)
+    petal.style.setProperty('--drift', `${acak(-14, 14)}vw`);
+    petal.style.setProperty('--spin', `${acak(-540, 540)}deg`);
+
+    const durasi = opsi.durasi ?? acak(lapisan.durasi[0], lapisan.durasi[1]);
+    petal.style.animationDuration = `${durasi}s`;
+
+    container.appendChild(petal);
+    setTimeout(() => petal.remove(), durasi * 1000 + 200);
+}
+
 function buatKelopakMawar() {
     const container = document.getElementById('rosePetalsContainer');
     if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     setInterval(() => {
-        const petal = document.createElement('div');
-        petal.classList.add('blue-petal');
-        
-        const size = Math.random() * 7 + 6;
-        petal.style.width = `${size}px`;
-        petal.style.height = `${size * 1.9}px`;
-        petal.style.left = `${Math.random() * 100}vw`;
-
-        const durasi = Math.random() * 7 + 6;
-        petal.style.animationDuration = `${durasi}s`;
-        
-        container.appendChild(petal);
-
-        setTimeout(() => {
-            petal.remove();
-        }, durasi * 1000);
-    }, 950);
+        // lapisan jauh muncul paling sering, lapisan dekat paling jarang
+        const r = Math.random();
+        const lapisan = r < 0.5 ? LAPISAN_KELOPAK[0] : (r < 0.85 ? LAPISAN_KELOPAK[1] : LAPISAN_KELOPAK[2]);
+        buatSatuKelopak(container, lapisan);
+    }, 1100);
 }
 
 function efekLedakanKelopak() {
     const container = document.getElementById('rosePetalsContainer');
     if (!container) return;
 
-    for (let i = 0; i < 18; i++) {
-        const petal = document.createElement('div');
-        petal.classList.add('blue-petal');
-        petal.style.width = '12px';
-        petal.style.height = '18px';
-        petal.style.left = `${Math.random() * 80 + 10}vw`;
-        petal.style.top = '0px';
-        petal.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
-        container.appendChild(petal);
-
-        setTimeout(() => petal.remove(), 3500);
+    for (let i = 0; i < 14; i++) {
+        const lapisan = LAPISAN_KELOPAK[i % 2]; // hanya lapisan jauh & tengah supaya data tetap terbaca
+        buatSatuKelopak(container, lapisan, {
+            left: acak(10, 90),
+            top: '0px',
+            durasi: acak(1.5, 3.5)
+        });
     }
+}
+
+// ==========================================================
+// PARALLAX: ornamen bergeser halus mengikuti kursor / kemiringan HP
+// Elemen dengan data-depth bergerak; angka lebih besar = lebih "dekat"
+// ==========================================================
+function aturParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const elemen = Array.from(document.querySelectorAll('[data-depth]'));
+    if (!elemen.length) return;
+
+    let targetX = 0, targetY = 0, rafId = null;
+
+    const terapkan = () => {
+        rafId = null;
+        elemen.forEach(el => {
+            const depth = parseFloat(el.dataset.depth) || 0;
+            el.style.translate = `${targetX * depth * 600}px ${targetY * depth * 600}px`;
+        });
+    };
+
+    const jadwalkan = () => { if (!rafId) rafId = requestAnimationFrame(terapkan); };
+
+    window.addEventListener('pointermove', (e) => {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        targetX = e.clientX / window.innerWidth - 0.5;
+        targetY = e.clientY / window.innerHeight - 0.5;
+        jadwalkan();
+    }, { passive: true });
+
+    // HP: gunakan sensor kemiringan bila tersedia (Android tanpa izin tambahan)
+    window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma === null || e.beta === null) return;
+        targetX = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
+        targetY = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 60));
+        jadwalkan();
+    }, { passive: true });
 }
 
 function tampilkanToast(pesan) {
