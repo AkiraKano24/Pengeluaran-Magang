@@ -377,18 +377,74 @@ function aturFilter() {
 // ==========================================================
 function aturNavigasi() {
     const navButtons = document.querySelectorAll('.nav');
+
+    function tampilkanView(viewId, simpanHistory = true) {
+        const targetButton = document.querySelector(
+            `.nav[data-view="${viewId}"]`
+        );
+
+        if (!targetButton) return;
+
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        targetButton.classList.add('active');
+
+        document.querySelectorAll('.view').forEach(view => {
+            view.classList.add('hidden');
+        });
+
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+            targetView.classList.remove('hidden');
+        }
+
+        document.getElementById('pageTitle').innerText =
+            targetButton.innerText;
+
+        if (simpanHistory) {
+            history.pushState(
+                { view: viewId },
+                '',
+                `#${viewId}`
+            );
+        }
+
+        efekLedakanKelopak();
+    }
+
+    // Klik menu
     navButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            navButtons.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            document.querySelectorAll('.view').forEach(view => view.classList.add('hidden'));
-            document.getElementById(e.target.getAttribute('data-view')).classList.remove('hidden');
-            document.getElementById('pageTitle').innerText = e.target.innerText;
-            
-            // Picu efek ledakan kelopak mawar biru saat ganti menu
-            efekLedakanKelopak();
+        btn.addEventListener('click', () => {
+            const viewId = btn.getAttribute('data-view');
+
+            // Jangan menambah history kalau halaman yang sama
+            const currentView = history.state?.view;
+
+            if (currentView === viewId) return;
+
+            tampilkanView(viewId, true);
         });
     });
+
+    // Tombol Back / Forward browser / HP
+    window.addEventListener('popstate', () => {
+        const viewId = history.state?.view || 'dashboard';
+        tampilkanView(viewId, false);
+    });
+
+    // Tentukan halaman awal
+    const hash = window.location.hash.replace('#', '');
+
+    if (hash === 'transactions' || hash === 'dashboard') {
+        tampilkanView(hash, false);
+    } else {
+        history.replaceState(
+            { view: 'dashboard' },
+            '',
+            '#dashboard'
+        );
+
+        tampilkanView('dashboard', false);
+    }
 }
 
 function aturModalForm() {
@@ -399,12 +455,47 @@ function aturModalForm() {
 
     if (!modal || !btnTambah || !btnTutup || !form) return;
 
-    btnTambah.addEventListener('click', () => {
+    function bukaModal(simpanHistory = true) {
         document.getElementById('date').valueAsDate = new Date();
         modal.classList.remove('hidden');
+
+        if (simpanHistory) {
+            history.pushState(
+                {
+                    view: history.state?.view || 'dashboard',
+                    modal: 'tambah'
+                },
+                '',
+                window.location.pathname + window.location.search + '#tambah'
+            );
+        }
+    }
+
+    function tutupModal(kembaliHistory = true) {
+        modal.classList.add('hidden');
+
+        if (kembaliHistory && history.state?.modal === 'tambah') {
+            history.back();
+        }
+    }
+
+    btnTambah.addEventListener('click', () => {
+        bukaModal(true);
     });
 
-    btnTutup.addEventListener('click', () => modal.classList.add('hidden'));
+    btnTutup.addEventListener('click', () => {
+        tutupModal(true);
+    });
+
+    window.addEventListener('popstate', () => {
+        const state = history.state;
+
+        if (state?.modal === 'tambah') {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -412,19 +503,31 @@ function aturModalForm() {
         const tanggalInput = document.getElementById('date').value;
         const dateObj = new Date(tanggalInput);
 
-        const tglFmt = String(dateObj.getDate()).padStart(2, '0') + '-' + dateObj.toLocaleString('en-GB', { month: 'short' });
-        const namaHari = dateObj.toLocaleDateString('id-ID', { weekday: 'long' });
-        const mingguVal = document.getElementById('mingguKe').value;
-        const btnSubmit = document.querySelector('#form button[type="submit"]');
+        const tglFmt =
+            String(dateObj.getDate()).padStart(2, '0') +
+            '-' +
+            dateObj.toLocaleString('en-GB', { month: 'short' });
+
+        const namaHari =
+            dateObj.toLocaleDateString('id-ID', { weekday: 'long' });
+
+        const mingguVal =
+            document.getElementById('mingguKe').value;
+
+        const btnSubmit =
+            document.querySelector('#form button[type="submit"]');
 
         const dataBaru = {
             data: [{
                 "Minggu": mingguVal,
                 "Tanggal": tglFmt,
                 "Hari": namaHari,
-                "Keterangan": document.getElementById('description').value,
-                "Jumlah": document.getElementById('quantity').value || '1',
-                "Nominal": document.getElementById('amount').value
+                "Keterangan":
+                    document.getElementById('description').value,
+                "Jumlah":
+                    document.getElementById('quantity').value || '1',
+                "Nominal":
+                    document.getElementById('amount').value
             }]
         };
 
@@ -434,21 +537,32 @@ function aturModalForm() {
 
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(dataBaru)
             });
 
             if (response.ok) {
                 form.reset();
                 modal.classList.add('hidden');
+
+                // Hapus state modal dari history
+                if (history.state?.modal === 'tambah') {
+                    history.back();
+                }
+
                 tampilkanToast("Data berhasil dicatat! ✅");
                 muatDataSpreadsheet();
             } else {
                 tampilkanToast("Gagal menyimpan data ❌");
             }
+
         } catch (error) {
             console.error('Error:', error);
             tampilkanToast("Gagal menyimpan data ❌");
+
         } finally {
             btnSubmit.innerText = "Simpan Pengeluaran";
             btnSubmit.disabled = false;
