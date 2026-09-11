@@ -33,11 +33,15 @@ function aturSistemLogin() {
 
             if (user === USERNAME_BENAR && pass === PASSWORD_BENAR) {
                 sessionStorage.setItem("isLoggedIn", "true");
-                loginError.style.display = "none";
+                if (loginError) loginError.style.display = "none"; // Sembunyikan error jika benar
                 loginForm.reset();
                 tampilkanAplikasiUtama();
             } else {
-                loginError.style.display = "block";
+                // MUNCULKAN KETERANGAN SALAH DI SINI
+                if (loginError) {
+                    loginError.innerText = "Username atau Password salah! Silakan coba lagi.";
+                    loginError.style.display = "block";
+                }
             }
         };
     }
@@ -45,6 +49,7 @@ function aturSistemLogin() {
     if (logoutBtn) {
         logoutBtn.onclick = () => {
             sessionStorage.removeItem("isLoggedIn");
+            if (loginError) loginError.style.display = "none"; // Sembunyikan pesan error saat logout
             tampilkanHalamanLogin();
         };
     }
