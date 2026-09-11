@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#05060B">
+    <title>Blue Rose Archive — Pengeluaran Magang</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="assets/rose-emblem.png">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <!-- LAPISAN TEKSTUR: HALFTONE MANGA + GARIS KECEPATAN -->
+    <div class="fx-halftone" aria-hidden="true"></div>
+    <div class="fx-speedlines" aria-hidden="true"></div>
+
+    <!-- KONTAINER EFEK KELOPAK MAWAR BIRU BERJATUHAN -->
+    <div id="rosePetalsContainer" class="petals-container" aria-hidden="true"></div>
+
+    <!-- ================= HALAMAN LOGIN ================= -->
+    <div id="loginPage" class="login-wrapper">
+        <div class="login-stage">
+
+            <!-- SISI KIRI: POSTER MAWAR BIRU -->
+            <aside class="login-art">
+                <div class="login-art-img" aria-hidden="true"></div>
+                <div class="login-art-copy">
+                    <p class="jp-vert">青い薔薇</p>
+                    <h1 class="art-title">BLUE<br>ROSE</h1>
+                    <p class="art-sub">ARCHIVE<span class="tick"></span>経費記録</p>
+                </div>
+            </aside>
+
+            <!-- SISI KANAN: FORM -->
+            <div class="login-card">
+                <div class="rose-mark" aria-hidden="true"></div>
+                <p class="eyebrow">認証 <span class="tick"></span> Autentikasi</p>
+                <h2>Silakan Login</h2>
+                <p class="lead">Masukkan akun untuk membuka arsip keuangan magang.</p>
+
+                <form id="loginForm">
+                    <label for="usernameInput">Username</label>
+                    <input id="usernameInput" type="text" required placeholder="Username..." autocomplete="username">
+
+                    <label for="passwordInput">Password</label>
+                    <input id="passwordInput" type="password" required placeholder="Password..." autocomplete="current-password">
+
+                    <button type="submit" class="btn-blade">Masuk Arsip</button>
+                    <p id="loginError">Username atau Password salah!</p>
+                </form>
+            </div>
+
+            <div class="corner tl" aria-hidden="true"></div>
+            <div class="corner br" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <!-- ================= APLIKASI UTAMA ================= -->
+    <div id="appContainer" class="hidden app-layout">
+
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div class="brand-text">
+                    <b>Blue Rose</b>
+                    <span>経費記録 / Magang</span>
+                </div>
+            </div>
+
+            <nav aria-label="Navigasi utama">
+                <p class="nav-legend">Menu</p>
+                <button class="nav active" data-view="dashboard">
+                    <span class="nav-jp">ダッシュ</span>
+                    <span class="nav-id">Dashboard</span>
+                </button>
+                <button class="nav" data-view="transactions">
+                    <span class="nav-jp">データ</span>
+                    <span class="nav-id">Data Pengeluaran</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-foot">
+                <p class="sidebar-note">Data tersimpan di Spreadsheet</p>
+                <button id="logoutBtn" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-title">
+                    <p class="eyebrow">BLUE ROSE ARCHIVE <span class="tick"></span> 青い薔薇</p>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <button class="primary btn-blade" id="addBtn">+ Tambah Pengeluaran</button>
+            </header>
+
+            <!-- ---------- DASHBOARD ---------- -->
+            <section id="dashboard" class="view">
+                <div class="cards">
+                    <article class="card">
+                        <span>Total Pengeluaran Keseluruhan</span>
+                        <strong id="totalAll">Rp0</strong>
+                        <i class="card-jp" aria-hidden="true">総額</i>
+                    </article>
+                    <article class="card card-alt">
+                        <span>Rata-rata Keseluruhan</span>
+                        <strong id="avgAll">Rp0 /hari</strong>
+                        <i class="card-jp" aria-hidden="true">平均</i>
+                    </article>
+                </div>
+
+                <div class="grid-two">
+                    <section class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Grafik Pengeluaran per Minggu</h2>
+                                <p>Total nominal per minggu</p>
+                            </div>
+                        </div>
+                        <div id="chartMinggu" class="chart">Memuat grafik...</div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Rata-rata per Minggu</h2>
+                                <p>Rata-rata harian tiap minggu</p>
+                            </div>
+                        </div>
+                        <div id="chartRataRata" class="chart">Memuat grafik...</div>
+                    </section>
+                </div>
+
+                <div class="grid-two">
+                    <section class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Transaksi Terbaru</h2>
+                                <p>5 pengeluaran terakhir</p>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr><th>Tanggal</th><th>Keterangan</th><th>Jumlah</th><th>Nominal</th></tr>
+                                </thead>
+                                <tbody id="recentBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Pengeluaran Terbesar</h2>
+                                <p>Detail waktu nominal tertinggi</p>
+                            </div>
+                        </div>
+                        <div id="topExpenseDetail" class="prose">Memuat...</div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- ---------- DATA TRANSAKSI ---------- -->
+            <section id="transactions" class="view hidden">
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2>Rekapitulasi Per Minggu</h2>
+                            <p>Pilih minggu untuk melihat rincian pengeluaran</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="selectMinggu">Pilih Minggu</label>
+                        <select id="selectMinggu">
+                            <option value="">Pilih Minggu...</option>
+                        </select>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Minggu</th><th>Pengeluaran (Per Minggu)</th><th>Rata-rata per Hari</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="rekapMingguVal">-</td>
+                                    <td id="rekapTotal" class="num num-blue">Rp0</td>
+                                    <td id="rekapRataRata" class="num num-pink">Rp0 /hari</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2>Daftar Semua Transaksi</h2>
+                            <p>Data tersimpan di Spreadsheet</p>
+                        </div>
+                    </div>
+
+                    <div class="filters">
+                        <input id="search" placeholder="Cari keterangan...">
+                        <button class="ghost" id="reset">Reset</button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Minggu</th><th>Tanggal</th><th>Hari</th><th>Keterangan</th><th>Jumlah</th><th>Nominal</th></tr>
+                            </thead>
+                            <tbody id="allBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <!-- ================= MODAL TAMBAH DATA ================= -->
+    <div class="modal hidden" id="modal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <p class="eyebrow">取引 <span class="tick"></span> TRANSAKSI</p>
+                    <h2>Tambah Pengeluaran</h2>
+                </div>
+                <button class="close" id="closeModal" aria-label="Tutup">&times;</button>
+            </div>
+
+            <form id="form">
+                <label>Tanggal<input id="date" type="date" required></label>
+                <label>Minggu Ke-<input id="mingguKe" type="number" min="1" required placeholder="Contoh: 1"></label>
+                <label>Keterangan<input id="description" placeholder="Contoh: Makan Siang" required></label>
+                <div class="two">
+                    <label>Jumlah<input id="quantity" type="text" placeholder="1"></label>
+                    <label>Nominal<input id="amount" type="number" min="1" step="1" required placeholder="13000"></label>
+                </div>
+                <button class="primary full btn-blade" type="submit">Simpan Pengeluaran</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+
+    <script src="config.js?v=3"></script>
+    <script src="app.js?v=3"></script>
+</body>
+</html>
