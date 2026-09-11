@@ -1,10 +1,10 @@
 let dataTransaksi = [];
 
 // ==========================================================
-// PENGATURAN LOGIN SEDERHANA
+// PENGATURAN LOGIN (USERNAME: Lief24, PASSWORD: adogasukidesu)
 // ==========================================================
-const USERNAME_BENAR = "admin";    
-const PASSWORD_BENAR = "magang123"; 
+const USERNAME_BENAR = "Lief24";    
+const PASSWORD_BENAR = "adogasukidesu"; 
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
