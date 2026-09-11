@@ -10,11 +10,16 @@
     <!-- KONTAINER EFEK KELOPAK MAWAR BIRU BERJATUHAN -->
     <div id="rosePetalsContainer" class="petals-container"></div>
 
-    <!-- HALAMAN LOGIN DENGAN LATAR BELAKANG MAWAR BIRU ADO -->
+    <!-- HALAMAN LOGIN -->
     <div id="loginPage" class="login-wrapper">
         <div class="login-card">
-            <!-- Lingkaran Mawar Biru Ikonik Ado -->
-            <div class="blue-rose-emblem">🌹</div>
+            <!-- EMBLEM MAWAR BIRU VECTORED ART -->
+            <div class="blue-rose-emblem" title="Blue Rose - Ado">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+                    <path d="M12 2C9 5 4 7 4 12c0 4 3 7 8 10 5-3 8-6 8-10 0-5-5-7-8-10zm0 16c-2.5-2-5-4.5-5-8 0-2.5 1.5-4 3.5-5 1 .5 2 1.5 2.5 3 .5-1.5 1.5-2.5 2.5-3 2 1 3.5 2.5 3.5 5 0 3.5-2.5 6-5 8z" fill="#38BDF8"/>
+                    <circle cx="12" cy="12" r="3" fill="#60A5FA" opacity="0.8"/>
+                </svg>
+            </div>
             <h2>Silakan Login</h2>
             <p>Masukkan akun untuk mengakses data keuangan.</p>
             <form id="loginForm">
@@ -30,11 +35,15 @@
         </div>
     </div>
 
-    <!-- APLIKASI UTAMA -->
+    <!-- APLIKASI UTAMA (AWALNYA DI-HIDDEN) -->
     <div id="appContainer" class="hidden app-layout">
         <aside class="sidebar">
             <div class="brand">
-                <div class="brand-mark">🌹</div>
+                <div class="brand-mark">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff">
+                        <path d="M12 2C9 5 4 7 4 12c0 4 3 7 8 10 5-3 8-6 8-10 0-5-5-7-8-10z"/>
+                    </svg>
+                </div>
                 <div><b>Pengeluaran</b><br><span>Magang</span></div>
             </div>
             <nav>
@@ -149,7 +158,7 @@
         </main>
     </div>
 
-    <!-- MODAL POP-UP -->
+    <!-- MODAL POP-UP TAMBAH DATA -->
     <div class="modal hidden" id="modal">
         <div class="modal-card">
             <div class="modal-head">
