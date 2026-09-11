@@ -1,5 +1,72 @@
 let dataTransaksi = [];
 
+// ==========================================================
+// PENGATURAN LOGIN SEDERHANA
+// ==========================================================
+const USERNAME_BENAR = "Lief3024";    // <-- Ubah username sesuai keinginanmu
+const PASSWORD_BENAR = "just-somebody-want-to-be-him"; // <-- Ubah password sesuai keinginanmu
+
+document.addEventListener("DOMContentLoaded", () => {
+    cekStatusLogin();
+    aturSistemLogin();
+});
+
+function cekStatusLogin() {
+    const sudahLogin = sessionStorage.getItem("isLoggedIn");
+    if (sudahLogin === "true") {
+        tampilkanAplikasiUtama();
+    } else {
+        tampilkanHalamanLogin();
+    }
+}
+
+function aturSistemLogin() {
+    const loginForm = document.getElementById("loginForm");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginError = document.getElementById("loginError");
+
+    if (loginForm) {
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const user = document.getElementById("usernameInput").value.trim();
+            const pass = document.getElementById("passwordInput").value.trim();
+
+            if (user === USERNAME_BENAR && pass === PASSWORD_BENAR) {
+                sessionStorage.setItem("isLoggedIn", "true");
+                loginError.style.display = "none";
+                loginForm.reset();
+                tampilkanAplikasiUtama();
+            } else {
+                loginError.style.display = "block";
+            }
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            sessionStorage.removeItem("isLoggedIn");
+            tampilkanHalamanLogin();
+        });
+    }
+}
+
+function tampilkanHalamanLogin() {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("appContainer").classList.add("hidden");
+}
+
+function tampilkanAplikasiUtama() {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("appContainer").classList.remove("hidden");
+
+    // Jalankan fungsi utama web
+    muatDataSpreadsheet();
+    aturNavigasi();
+    aturModalForm();
+    aturFilter();
+    aturRekapMingguan();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     muatDataSpreadsheet();
     aturNavigasi();
