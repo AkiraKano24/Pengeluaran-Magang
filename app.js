@@ -3,8 +3,8 @@ let dataTransaksi = [];
 // ==========================================================
 // PENGATURAN LOGIN SEDERHANA
 // ==========================================================
-const USERNAME_BENAR = "admin";    // Ganti username jika ingin
-const PASSWORD_BENAR = "magang123"; // Ganti password jika ingin
+const USERNAME_BENAR = "Lief3024";    // Ganti username jika ingin
+const PASSWORD_BENAR = "LikeAdo2430"; // Ganti password jika ingin
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
