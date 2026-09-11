@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pengeluaran Magang</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">Rp</div>
+            <div><b>Pengeluaran</b><br><span>Magang</span></div>
+        </div>
+        <nav>
+            <button class="nav active" data-view="dashboard">Dashboard</button>
+            <button class="nav" data-view="transactions">Data Pengeluaran</button>
+        </nav>
+        <div class="side-note">Data tersimpan di Spreadsheet</div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">CATATAN KEUANGAN</p>
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+            <button class="primary" id="addBtn">+ Tambah Pengeluaran</button>
+        </header>
+
+        <!-- TAMPILAN DASHBOARD -->
+        <section id="dashboard" class="view">
+            <div class="cards">
+                <article class="card"><span>Total Pengeluaran Keseluruhan</span><strong id="totalAll">Rp0</strong></article>
+                <article class="card"><span>Rata-rata Keseluruhan</span><strong id="avgAll">Rp0 /hari</strong></article>
+            </div>
+
+            <div class="grid-two">
+                <section class="panel">
+                    <div class="panel-head">
+                        <div><h2>Grafik Pengeluaran per Minggu</h2><p>Total nominal per minggu</p></div>
+                    </div>
+                    <div id="chartMinggu" class="chart">Memuat grafik...</div>
+                </section>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div><h2>Rata-rata per Minggu</h2><p>Rata-rata harian tiap minggu</p></div>
+                    </div>
+                    <div id="chartRataRata" class="chart">Memuat grafik...</div>
+                </section>
+            </div>
+
+            <div class="grid-two">
+                <section class="panel">
+                    <div class="panel-head">
+                        <div><h2>Transaksi Terbaru</h2><p>5 pengeluaran terakhir</p></div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Tanggal</th><th>Keterangan</th><th>Jumlah</th><th>Nominal</th></tr>
+                            </thead>
+                            <tbody id="recentBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div><h2>Pengeluaran Terbesar</h2><p>Detail waktu nominal tertinggi</p></div>
+                    </div>
+                    <div id="topExpenseDetail" style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">Memuat...</div>
+                </section>
+            </div>
+        </section>
+
+        <!-- TAMPILAN DATA TRANSAKSI -->
+        <section id="transactions" class="view hidden">
+            <!-- TABEL REKAP MINGGUAN (PILIHAN MINGGU) -->
+            <section class="panel">
+                <div class="panel-head">
+                    <div><h2>Rekapitulasi Per Minggu</h2><p>Pilih minggu untuk melihat rincian pengeluaran</p></div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Pilih Minggu:</label>
+                    <select id="selectMinggu" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #D1D5DB; font-size: 14px; width: 200px;">
+                        <option value="">Pilih Minggu...</option>
+                    </select>
+                </div>
+                <div class="table-wrap" style="margin-bottom: 24px;">
+                    <table>
+                        <thead>
+                            <tr><th>Minggu</th><th>Pengeluaran (Per Minggu)</th><th>Rata-rata per Hari (Dalam 1 Minggu)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="rekapMingguVal">-</td>
+                                <td id="rekapTotal" style="color:#4F46E5; font-weight:600;">Rp0</td>
+                                <td id="rekapRataRata" style="color:#10B981; font-weight:600;">Rp0 /hari</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TABEL UTAMA -->
+            <section class="panel">
+                <div class="panel-head">
+                    <div><h2>Daftar Semua Transaksi</h2><p>Data tersimpan di Spreadsheet</p></div>
+                </div>
+                <div class="filters">
+                    <input id="search" placeholder="Cari keterangan...">
+                    <button class="ghost" id="reset">Reset</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Minggu</th><th>Tanggal</th><th>Hari</th><th>Keterangan</th><th>Jumlah</th><th>Nominal</th></tr>
+                        </thead>
+                        <tbody id="allBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- MODAL POP-UP TAMBAH DATA -->
+    <div class="modal hidden" id="modal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <p class="eyebrow">TRANSAKSI</p>
+                    <h2>Tambah Pengeluaran</h2>
+                </div>
+                <button class="close" id="closeModal">×</button>
+            </div>
+            <form id="form">
+                <label>Tanggal<input id="date" type="date" required></label>
+                <label>Minggu Ke-<input id="mingguKe" type="number" min="1" required placeholder="Contoh: 1"></label>
+                <label>Keterangan<input id="description" placeholder="Contoh: Makan Siang" required></label>
+                <div class="two">
+                    <label>Jumlah<input id="quantity" type="text" placeholder="1"></label>
+                    <label>Nominal<input id="amount" type="number" min="1" step="1" required placeholder="13000"></label>
+                </div>
+                <button class="primary full" type="submit">Simpan Pengeluaran</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
