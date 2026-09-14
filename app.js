@@ -1,10 +1,9 @@
 let dataTransaksi = [];
 
 // ==========================================================
-// PENGATURAN LOGIN (USERNAME: Lief24, PASSWORD: adogasukidesu)
+// LOGIN & KOMUNIKASI DENGAN GOOGLE APPS SCRIPT
 // ==========================================================
-const USERNAME_BENAR = "Lief24";    
-const PASSWORD_BENAR = "adogasukidesu"; 
+let aplikasiSudahDiinisialisasi = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     cekStatusLogin();
@@ -13,9 +12,24 @@ document.addEventListener("DOMContentLoaded", () => {
     aturParallax();
 });
 
+function ambilToken() {
+    return sessionStorage.getItem("sessionToken") || "";
+}
+
+async function kirimKeApi(payload) {
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+}
+
 function cekStatusLogin() {
-    const sudahLogin = sessionStorage.getItem("isLoggedIn");
-    if (sudahLogin === "true") {
+    if (ambilToken()) {
         tampilkanAplikasiUtama();
     } else {
         tampilkanHalamanLogin();
@@ -28,28 +42,48 @@ function aturSistemLogin() {
     const loginError = document.getElementById("loginError");
 
     if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const user = document.getElementById("usernameInput").value.trim();
-            const pass = document.getElementById("passwordInput").value.trim();
+            const pass = document.getElementById("passwordInput").value;
+            const tombol = loginForm.querySelector('button[type="submit"]');
 
-            if (user === USERNAME_BENAR && pass === PASSWORD_BENAR) {
-                sessionStorage.setItem("isLoggedIn", "true");
+            tombol.disabled = true;
+            tombol.innerText = "Memeriksa...";
+
+            try {
+                const hasil = await kirimKeApi({
+                    action: "login",
+                    username: user,
+                    password: pass
+                });
+
+                if (!hasil.success || !hasil.token) {
+                    throw new Error(hasil.message || "Username atau password salah");
+                }
+
+                sessionStorage.setItem("sessionToken", hasil.token);
                 if (loginError) loginError.style.display = "none";
                 loginForm.reset();
                 tampilkanAplikasiUtama();
-            } else {
+            } catch (error) {
+                console.error("Login gagal:", error);
                 if (loginError) {
-                    loginError.innerText = "Username atau Password salah! Silakan coba lagi.";
+                    loginError.innerText = error.message || "Login gagal. Silakan coba lagi.";
                     loginError.style.display = "block";
                 }
+            } finally {
+                tombol.disabled = false;
+                tombol.innerText = "Masuk Arsip";
             }
         });
     }
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
-            sessionStorage.removeItem("isLoggedIn");
+            const token = ambilToken();
+            if (token) kirimKeApi({ action: "logout", token }).catch(() => {});
+            sessionStorage.removeItem("sessionToken");
             if (loginError) loginError.style.display = "none";
             tampilkanHalamanLogin();
         });
@@ -59,7 +93,7 @@ function aturSistemLogin() {
 function tampilkanHalamanLogin() {
     const loginPage = document.getElementById("loginPage");
     const appContainer = document.getElementById("appContainer");
-    
+
     if (loginPage) loginPage.style.display = "flex";
     if (appContainer) appContainer.classList.add("hidden");
     document.body.classList.add("mode-login");
@@ -75,11 +109,21 @@ function tampilkanAplikasiUtama() {
     document.body.classList.add("mode-app");
     document.body.classList.remove("mode-login");
 
+    if (!aplikasiSudahDiinisialisasi) {
+        aturNavigasi();
+        aturModalForm();
+        aturFilter();
+        aturRekapMingguan();
+        aplikasiSudahDiinisialisasi = true;
+    }
+
     muatDataSpreadsheet();
-    aturNavigasi();
-    aturModalForm();
-    aturFilter();
-    aturRekapMingguan();
+}
+
+function perbaruiSemuaTampilan() {
+    perbaruiDashboard();
+    perbaruiTabelSemua();
+    inisialisasiPilihanMinggu();
 }
 
 function escapeHtml(str) {
@@ -116,17 +160,24 @@ function formatTanggalDariSheet(nilai) {
 
 async function muatDataSpreadsheet() {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Gagal fetch data');
-        const data = await response.json();
-        dataTransaksi = data;
+        const hasil = await kirimKeApi({
+            action: "getData",
+            token: ambilToken()
+        });
 
-        perbaruiDashboard();
-        perbaruiTabelSemua();
-        inisialisasiPilihanMinggu();
+        if (!hasil.success) {
+            if (hasil.code === "UNAUTHORIZED") {
+                sessionStorage.removeItem("sessionToken");
+                tampilkanHalamanLogin();
+            }
+            throw new Error(hasil.message || "Gagal memuat data");
+        }
+
+        dataTransaksi = Array.isArray(hasil.data) ? hasil.data : [];
+        perbaruiSemuaTampilan();
     } catch (error) {
-        console.error('Error:', error);
-        tampilkanToast('Gagal memuat data dari Spreadsheet');
+        console.error("Error:", error);
+        tampilkanToast(error.message || "Gagal memuat data dari Spreadsheet");
     }
 }
 
@@ -472,34 +523,37 @@ function aturModalForm() {
         const btnSubmit = document.querySelector('#form button[type="submit"]');
 
         const dataBaru = {
-            data: [{
-                "Minggu": mingguVal,
-                "Tanggal": tglFmt,
-                "Hari": namaHari,
-                "Keterangan": document.getElementById('description').value,
-                "Jumlah": document.getElementById('quantity').value || '1',
-                "Nominal": document.getElementById('amount').value
-            }]
+            "Minggu": mingguVal,
+            "Tanggal": tglFmt,
+            "Hari": namaHari,
+            "Keterangan": document.getElementById('description').value,
+            "Jumlah": document.getElementById('quantity').value || '1',
+            "Nominal": document.getElementById('amount').value
         };
 
         try {
             btnSubmit.innerText = "Menyimpan...";
             btnSubmit.disabled = true;
 
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataBaru)
+            const hasil = await kirimKeApi({
+                action: "addData",
+                token: ambilToken(),
+                data: dataBaru
             });
 
-            if (response.ok) {
-                form.reset();
-                modal.classList.add('hidden');
-                tampilkanToast("Data berhasil dicatat! ✅");
-                muatDataSpreadsheet();
-            } else {
-                tampilkanToast("Gagal menyimpan data ❌");
+            if (!hasil.success) {
+                if (hasil.code === "UNAUTHORIZED") {
+                    sessionStorage.removeItem("sessionToken");
+                    tampilkanHalamanLogin();
+                }
+                throw new Error(hasil.message || "Gagal menyimpan data");
             }
+
+            dataTransaksi.push(hasil.data);
+            perbaruiSemuaTampilan();
+            form.reset();
+            modal.classList.add('hidden');
+            tampilkanToast("Data berhasil dicatat! ✅");
         } catch (error) {
             console.error('Error:', error);
             tampilkanToast("Gagal menyimpan data ❌");
