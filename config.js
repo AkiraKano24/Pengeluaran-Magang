@@ -8,4 +8,4 @@
 // ini akan di-deploy publik, sebaiknya batasi akses di pengaturan
 // SheetDB (misalnya read-only publik + write lewat API key terpisah)
 // atau taruh di belakang server/proxy sederhana.
-const API_URL = 'https://sheetdb.io/api/v1/0c62iyizxk7iw';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyxQ1riaRosChv378l7KAagI03ZYbAUiV3eBDXEfbbTL8cAWYLc5azvN3A0FMGznoq6eA/exec';
